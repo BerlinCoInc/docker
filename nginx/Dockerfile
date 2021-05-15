@@ -1,11 +1,11 @@
-ARG PHP_VERSION
+ARG PHP_VERSION="7.4"
 FROM craftcms/php-fpm:${PHP_VERSION}
 
 ARG NGINX_CONF=default.conf
 
 # install supervisor and nginx
 USER root
-RUN apk update --no-cache && apk add --no-cache supervisor nginx
+RUN apk update --no-cache && apk add --no-cache supervisor nginx git openssh
 COPY supervisor.conf /etc/supervisor/conf.d/supervisor.conf
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY craftcms/general.conf /etc/nginx/craftcms/
@@ -17,6 +17,13 @@ RUN touch /run/supervisord.pid
 RUN chown www-data /run/nginx.pid
 RUN chown www-data /run/supervisord.pid
 RUN chown -R www-data:www-data /var/lib/nginx/logs/
+RUN chown -R www-data:www-data /var/lib/nginx
+# SSH key config
+RUN mkdir /home/www-data/.ssh
+RUN chown www-data /home/www-data/.ssh
+RUN ln -s /etc/keyfiles/deploy-key /home/www-data/.ssh/id_rsa
+RUN ln -s /etc/keyfiles/deploy-key.pub /home/www-data/.ssh/id_rsa.pub
+
 USER www-data
 
 EXPOSE 8080
