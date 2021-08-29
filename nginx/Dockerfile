@@ -1,4 +1,4 @@
-ARG PHP_VERSION="7.4"
+ARG PHP_VERSION="8.0"
 FROM craftcms/php-fpm:${PHP_VERSION}
 
 ARG NGINX_CONF=default.conf
