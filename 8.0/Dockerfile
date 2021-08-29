@@ -1,7 +1,9 @@
-ARG PHP_VERSION
-ARG PROJECT_TYPE
+ARG PHP_VERSION='8.0'
+ARG PROJECT_TYPE='apache'
 
-FROM php:${PHP_VERSION}-${PROJECT_TYPE}-alpine
+#FROM php:${PHP_VERSION}-${PROJECT_TYPE}-alpine
+#FROM php:${PHP_VERSION}-alpine
+FROM php:${PHP_VERSION}-${PROJECT_TYPE}
 
 # setup general options for environment variables
 ARG PHP_MEMORY_LIMIT_ARG="256M"
@@ -41,7 +43,7 @@ RUN set -ex && \
     g++ \
     make \
     freetype \
-    gnu-libiconv=1.15-r3 \
+    gnu-libiconv \
     libzip-dev \
     libpng \
     libjpeg-turbo \
@@ -69,7 +71,8 @@ RUN set -ex && \
     libjpeg-turbo-dev \
     autoconf \
     g++ \
-    make
+    make \
+    git
 
 # https://github.com/docker-library/php/issues/1121
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so
@@ -88,6 +91,12 @@ RUN mkdir -p /app
 
 # set the permissions on the
 RUN chown -R www-data:www-data /app
+RUN chown -R www-data:www-data /var/lib/nginx
+
+# SSH key config
+RUN mkdir /home/www-data/.ssh
+RUN ln -s /etc/keyfiles/deploy-key /home/www-data/.ssh/id_rsa
+RUN ln -s /etc/keyfiles/deploy-key.pub /home/www-data/.ssh/id_rsa.pub
 
 # set the working directory for conveinence
 WORKDIR /app
