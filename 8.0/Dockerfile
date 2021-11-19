@@ -95,8 +95,8 @@ RUN chown -R www-data:www-data /var/lib/nginx
 
 # SSH key config
 RUN mkdir /home/www-data/.ssh
-RUN ln -s /etc/keyfiles/deploy-key /home/www-data/.ssh/id_rsa
-RUN ln -s /etc/keyfiles/deploy-key.pub /home/www-data/.ssh/id_rsa.pub
+RUN ln -s /etc/keyfiles/id_rsa /home/www-data/.ssh/id_rsa
+RUN ln -s /etc/keyfiles/id_rsa.pub /home/www-data/.ssh/id_rsa.pub
 
 # set the working directory for conveinence
 WORKDIR /app
